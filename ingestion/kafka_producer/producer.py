@@ -7,6 +7,8 @@ from faker import Faker
 import random
 from datetime import datetime
 
+from data_contracts.validators.event_validator import validate_event
+
 fake = Faker()
 
 # Kafka configuration
@@ -47,9 +49,11 @@ def stream_events():
 
         event = generate_event()
 
-        producer.send(TOPIC_NAME, event)
-
-        print("Event sent:", event)
+        if validate_event(event):
+            producer.send(TOPIC_NAME, event)
+            print(f"Valid event sent: {event}")
+        else:
+            print(f"Invalid event skipped {event}")
 
         time.sleep(1)
 

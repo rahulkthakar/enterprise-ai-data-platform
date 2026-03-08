@@ -4,13 +4,14 @@ from pyspark.sql import SparkSession
 from pyspark.sql.functions import col, from_json
 from pyspark.sql.types import StructType, StringType, FloatType
 
+BRONZE_PATH = "lakehouse/bronze/user_events"
 
 def create_spark_session():
 
     spark = SparkSession.builder \
         .appName("KafkaSparkStreaming") \
         .master("local[*]") \
-        .config("spark.sql.streaming.checkpointLocation", "/tmp/spark-checkpoints") \
+        .config("spark.sql.streaming.checkpointLocation", "lakehouse/checkpoints") \
         .config("spark.jars.packages", "org.apache.spark:spark-sql-kafka-0-10_2.13:4.1.1") \
         .getOrCreate()
     
@@ -78,10 +79,19 @@ def main():
 
     print("Parsed streaming DataFrame")
 
-    # Print stream to console
+    ## Print stream to console
+    #
+    #query = parsed_df.writeStream \
+    #    .format("console") \
+    #    .outputMode("append") \
+    #    .start()
+
+    # Write raw events to Bronze layer
 
     query = parsed_df.writeStream \
-        .format("console") \
+        .format("parquet") \
+        .option("path", BRONZE_PATH) \
+        .option("checkpointLocation", "lakehouse/bronze/checkpoints") \
         .outputMode("append") \
         .start()
     

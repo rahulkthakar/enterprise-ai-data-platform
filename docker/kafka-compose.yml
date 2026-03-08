@@ -9,6 +9,7 @@ services:
       # Use a valid 22-character base64 UUID
       CLUSTER_ID: 'p8fFEbKGQ22B6M_Da_vCBw' 
       KAFKA_NODE_ID: 1
+      KAFKA_BROKER_ID: 1
       KAFKA_PROCESS_ROLES: 'broker,controller'
       KAFKA_CONTROLLER_QUORUM_VOTERS: '1@kafka:9093'
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
