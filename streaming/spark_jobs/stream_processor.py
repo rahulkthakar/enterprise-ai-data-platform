@@ -4,6 +4,10 @@ from pyspark.sql import SparkSession
 from pyspark.sql.functions import col, from_json
 from pyspark.sql.types import StructType, StringType, FloatType
 
+from data_quality.expectations.user_events_expectations.expectations import (
+    validate_events,
+)
+
 BRONZE_PATH = "lakehouse/bronze/user_events"
 
 
@@ -22,6 +26,24 @@ def create_spark_session():
     spark.sparkContext.setLogLevel("WARN")
 
     return spark
+
+
+def validate_and_write(batch_df, batch_id):
+
+    if batch_df.count() == 0:
+        return
+
+    print("Running data quality validation...")
+
+    if validate_events(batch_df):
+
+        print("Data quality passed")
+
+        batch_df.write.mode("append").parquet(BRONZE_PATH)
+
+    else:
+
+        print("Data quality failed — batch skipped")
 
 
 def main():
@@ -95,10 +117,16 @@ def main():
 
     # Write raw events to Bronze layer
 
+    # query = (
+    #    parsed_df.writeStream.format("parquet")
+    #    .option("path", BRONZE_PATH)
+    #    .option("checkpointLocation", "lakehouse/bronze/checkpoints")
+    #    .outputMode("append")
+    #    .start()
+    # )
+
     query = (
-        parsed_df.writeStream.format("parquet")
-        .option("path", BRONZE_PATH)
-        .option("checkpointLocation", "lakehouse/bronze/checkpoints")
+        parsed_df.writeStream.foreachBatch(validate_and_write)
         .outputMode("append")
         .start()
     )
