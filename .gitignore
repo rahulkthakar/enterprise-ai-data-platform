@@ -1,0 +1,11 @@
+venv/
+__pycache__/
+*.pyc
+.env
+.DS_Store
+*.log
+mlruns/
+*.parquet
+lakehouse/checkpoints/
+lakehouse/bronze/user_events
+lakehouse/bronze/checkpoints

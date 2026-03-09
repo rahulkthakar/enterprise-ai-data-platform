@@ -1,0 +1,9 @@
+[flake8]
+# Comma-separated list of directories to ignore
+exclude = 
+    venv,
+    .venv,
+    .git,
+    __pycache__,
+    mlruns/
+extend-ignore = E501
