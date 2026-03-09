@@ -15,6 +15,7 @@ EVENT_TYPES = ["view", "cart", "purchase"]
 DEVICES = ["mobile", "desktop", "tablet"]
 LOCATIONS = ["USA", "Canada", "UK", "Germany", "India"]
 
+
 # Function to generate a single event
 def generate_event():
     event = {
@@ -24,9 +25,10 @@ def generate_event():
         "device": random.choice(DEVICES),
         "location": random.choice(LOCATIONS),
         "price": round(random.uniform(10.0, 2000.0), 2),
-        "timestamp": datetime.utcnow().isoformat()
+        "timestamp": datetime.utcnow().isoformat(),
     }
     return event
+
 
 # Main loop to generate events every second
 if __name__ == "__main__":

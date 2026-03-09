@@ -18,7 +18,7 @@ TOPIC_NAME = "user_events"
 # Initialize Kafka Producer
 producer = KafkaProducer(
     bootstrap_servers=KAFKA_BROKER,
-    value_serializer=lambda v: json.dumps(v).encode("utf-8")
+    value_serializer=lambda v: json.dumps(v).encode("utf-8"),
 )
 
 # Data simulation fields
@@ -26,6 +26,7 @@ PRODUCTS = ["Laptop", "Smartphone", "Headphones", "Camera", "Smartwatch"]
 EVENT_TYPES = ["view", "cart", "purchase"]
 DEVICES = ["mobile", "desktop", "tablet"]
 LOCATIONS = ["USA", "Canada", "UK", "Germany", "India"]
+
 
 # Generate event
 def generate_event():
@@ -36,7 +37,7 @@ def generate_event():
         "device": random.choice(DEVICES),
         "location": random.choice(LOCATIONS),
         "price": round(random.uniform(10, 2000), 2),
-        "timestamp": datetime.now().isoformat()
+        "timestamp": datetime.now().isoformat(),
     }
     return event
 
