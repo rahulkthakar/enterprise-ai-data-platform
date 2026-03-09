@@ -7,3 +7,4 @@ __pycache__/
 mlruns/
 *.parquet
 lakehouse/checkpoints/
+lakehouse/bronze/user_events
