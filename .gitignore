@@ -9,3 +9,4 @@ mlruns/
 lakehouse/checkpoints/
 lakehouse/bronze/user_events
 lakehouse/bronze/checkpoints
+lakehouse/silver/user_events
