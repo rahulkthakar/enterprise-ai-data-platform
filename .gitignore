@@ -13,3 +13,4 @@ lakehouse/silver/user_events
 lakehouse/gold/revenue_per_hour
 lakehouse/gold/user_metrics
 lakehouse/gold/conversion_rate
+lakehouse/gold/top_products
