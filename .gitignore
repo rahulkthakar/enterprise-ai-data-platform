@@ -10,3 +10,6 @@ lakehouse/checkpoints/
 lakehouse/bronze/user_events
 lakehouse/bronze/checkpoints
 lakehouse/silver/user_events
+lakehouse/gold/revenue_per_hour
+lakehouse/gold/user_metrics
+lakehouse/gold/conversion_rate
