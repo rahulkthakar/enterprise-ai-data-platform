@@ -1,14 +1,16 @@
 # streaming/spark_jobs/stream_processor.py
 
 from pyspark.sql import SparkSession
-from pyspark.sql.functions import col, from_json
+from pyspark.sql.functions import col, from_json,  to_timestamp, lower, trim
 from pyspark.sql.types import StructType, StringType, FloatType
 
 from data_quality.expectations.user_events_expectations.expectations import (
     validate_events,
 )
 
+
 BRONZE_PATH = "lakehouse/bronze/user_events"
+SILVER_PATH = "lakehouse/silver/user_events"
 
 
 def create_spark_session():
@@ -41,10 +43,28 @@ def validate_and_write(batch_df, batch_id):
 
         batch_df.write.mode("append").parquet(BRONZE_PATH)
 
+        # Clean data for Silver layer
+        cleaned_df = clean_events(batch_df)
+
+        print("Writing cleaned data to Silver")
+
+        cleaned_df.write \
+            .mode("append") \
+            .parquet(SILVER_PATH)
+
     else:
 
         print("Data quality failed — batch skipped")
 
+def clean_events(df):
+
+    cleaned_df = df \
+        .dropDuplicates(["user_id", "product_id", "timestamp"]) \
+        .withColumn("timestamp", to_timestamp(col("timestamp"))) \
+        .withColumn("device", lower(trim(col("device")))) \
+        .withColumn("location", trim(col("location")))
+
+    return cleaned_df
 
 def main():
 
